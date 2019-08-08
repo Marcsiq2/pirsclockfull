@@ -13,6 +13,9 @@ os.environ['SDL_VIDEODRIVER']="fbcon"
 
 url = 'http://127.0.0.1:5000/mode/'
 
+# set ipaddress to None in order to get it automatically
+ipaddress = None
+
 # Setting up the GPIO and inputs with pull up
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.IN, GPIO.PUD_UP)
@@ -42,7 +45,7 @@ digiclockspace = int(bg.get_height()/10.5)
 dotsize        = int(bg.get_height()/90)
 hradius        = bg.get_height()/2.5
 secradius      = hradius - (bg.get_height()/26)
-indtxtsize     = int(bg.get_height()/6)
+indtxtsize     = int(bg.get_height()/7)
 labeltxtsize   = int(bg.get_height()/45)
 indboxy        = int(bg.get_height()/6)
 indboxx        = int(bg.get_width()/2.5)
@@ -50,8 +53,8 @@ indboxx        = int(bg.get_width()/2.5)
 # Coords of items on display
 xclockpos      = int(bg.get_width()*0.2875)
 ycenter        = int(bg.get_height()/2)
-xtxtpos        = int(bg.get_width()*0.75)
-xindboxpos     = int(xtxtpos-(indboxx/2))
+xtxtpos        = int(bg.get_width()*0.75)+20
+xindboxpos     = int(xtxtpos-(indboxx/2))+10
 ind1y          = int((ycenter*0.4)-(indboxy/2))       
 ind2y          = int((ycenter*0.8)-(indboxy/2))
 ind3y          = int((ycenter*1.2)-(indboxy/2))
@@ -70,20 +73,11 @@ ind2txt       = indfont.render("REHEARSAL",True,bgcolour)
 ind3txt       = indfont.render("ON AIR",True,bgcolour)
 ind4txt       = indfont.render("DOOR",True,bgcolour)
 
-# IP Address
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("8.8.8.8", 80))
-ipaddress = (s.getsockname()[0])
-iplabeltxt       = labelfont.render(ipaddress+':5000',True,clockcolour)
-
 # Indicator positions
-txtposind1 = ind1txt.get_rect(centerx=xtxtpos,centery=ycenter*0.4)
-txtposind2 = ind2txt.get_rect(centerx=xtxtpos,centery=ycenter*0.8)
-txtposind3 = ind3txt.get_rect(centerx=xtxtpos,centery=ycenter*1.2)
-txtposind4 = ind4txt.get_rect(centerx=xtxtpos,centery=ycenter*1.6)
-
-# label positions
-iplabelpos = iplabeltxt.get_rect(centerx=int(bg.get_width()*0.9),centery=ycenter*1.9)
+txtposind1 = ind1txt.get_rect(centerx=xtxtpos+5,centery=ycenter*0.4)
+txtposind2 = ind2txt.get_rect(centerx=xtxtpos+5,centery=ycenter*0.8)
+txtposind3 = ind3txt.get_rect(centerx=xtxtpos+5,centery=ycenter*1.2)
+txtposind4 = ind4txt.get_rect(centerx=xtxtpos+5,centery=ycenter*1.6)
 
 # Parametric Equations of a Circle to get the markers
 # 90 Degree ofset to start at 0 seconds marker
@@ -161,6 +155,26 @@ while True :
     #    pygame.draw.rect(bg, offcolour,(xindboxpos, ind4y, indboxx, indboxy))
     #else:
     #    pygame.draw.rect(bg, ind4colour,(xindboxpos, ind4y, indboxx, indboxy))
+
+    if ipaddress == None:
+
+	try:
+	    # IP Address
+	    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+	    s.settimeout(60)
+	    s.connect(("8.8.8.8", 80))
+	    s.settimeout(None)
+	    ipaddress = (s.getsockname()[0])
+	    iplabeltxt = labelfont.render(ipaddress+':5000',True,clockcolour)
+        except:
+	    iplabeltxt = labelfont.render('ip unknown', True,clockcolour)
+    else:
+	iplabeltxt = labelfont.render(ipaddress+':5000',True,clockcolour)
+
+    # label positions
+    iplabelpos = iplabeltxt.get_rect(centerx=int(bg.get_width()*0.9),centery=ycenter*1.9)
+
+
     
     # Render the text
     bg.blit(digiclockhm, txtposhm)
