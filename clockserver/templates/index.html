@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<style>
+	.btn-group button {
+	  background-color: #4CAF50; /* Green background */
+	  border: 1px solid green; /* Green border */
+	  color: white; /* White text */
+	  padding: 10px 24px; /* Some padding */
+	  cursor: pointer; /* Pointer/hand icon */
+	  width: 20%; /* Set a width if needed */
+	  display: block; /* Float the buttons side by side */
+	}
+
+	/* Clear floats (clearfix hack) */
+	.btn-group:after {
+	  content: "";
+	  clear: both;
+	  display: table;
+	}
+
+	.btn-group button:not(:last-child) {
+	  border-right: none; /* Prevent double borders */
+	}
+
+	/* Add a background color on hover */
+	.btn-group button:hover {
+	  background-color: #3e8e41;
+	}
+	</style>
+
+	<head>
+		<title>Clock Server</title>
+		<style type="text/css">
+			* {
+				font-family: sans-serif;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Clock Server</h1>
+		<div class="btn-group">
+		
+    	<form class="form-horizontal" method="post" id="myform" action="mode_rehearsal/">
+                <button type="submit" class="btn btn-success">REHEARSAL</button>
+    	</form>
+    	<form class="form-horizontal" method="post" id="myform" action="mode_air/">
+                <button type="submit" class="btn btn-success">ON AIR</button>
+    	</form>
+
+    	<form class="form-horizontal" method="post" id="myform" action="mode_none/">
+                <button type="submit" class="btn btn-success">NONE</button>
+    	</form>
+    	</div>
+		
+	</body>
+</html>
